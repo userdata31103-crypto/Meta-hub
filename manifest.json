@@ -7,16 +7,16 @@
   "background_color": "#000000",
   "theme_color": "#6a0dad",
   "orientation": "portrait",
-  "icons": [
-    {
-      "src": "IMG-20260618-WA0017.jpg",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "IMG-20260618-WA0017.jpg",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
-}
+  
+      "icons": [
+  {
+    "src": "icon-192.png",
+    "sizes": "192x192",
+    "type": "image/png"
+  },
+  {
+    "src": "icon-512.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }
+      ]
