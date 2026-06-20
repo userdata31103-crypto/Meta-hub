@@ -479,6 +479,7 @@ margin:0;
 font-size:18px;
 }
 </style>
+  <link rel="manifest" href="manifest.json">
 </head>
   <body style="display:none;">
 
@@ -805,6 +806,11 @@ window.location.href="login.html";
 }
 
 </script>
+    <script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js");
+}
+    </script>
 
 </body>
 </html>
