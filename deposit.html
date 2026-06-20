@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>META HUB Deposit</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:radial-gradient(circle at top,
+#6a0dad 0%,
+#2b004f 30%,
+#12001f 60%,
+#000000 100%);
+min-height:100vh;
+
+padding:20px;
+}
+
+.deposit-card{
+position:relative;
+overflow:hidden;
+width:100%;
+max-width:500px;
+padding:30px;
+border-radius:25px;
+background:#111;
+box-shadow:0 0 25px rgba(184,77,255,.5);
+}
+
+.deposit-card::before{
+content:"";
+position:absolute;
+width:200%;
+height:200%;
+top:-50%;
+left:-50%;
+background:conic-gradient(
+transparent,
+#b84dff,
+#ffffff,
+#b84dff,
+transparent
+);
+animation:rotateBorder 4s linear infinite;
+}
+
+.deposit-card::after{
+content:"";
+position:absolute;
+inset:3px;
+background:#111;
+border-radius:22px;
+z-index:1;
+}
+
+.deposit-card *{
+position:relative;
+z-index:2;
+}
+
+h2{
+text-align:center;
+color:white;
+font-size:30px;
+margin-bottom:25px;
+text-shadow:0 0 15px #b84dff;
+}
+
+label{
+display:block;
+color:white;
+font-size:17px;
+font-weight:bold;
+margin-top:15px;
+margin-bottom:8px;
+}
+
+select,
+input{
+width:100%;
+padding:14px;
+border:none;
+outline:none;
+border-radius:12px;
+background:#222;
+color:white;
+font-size:16px;
+}
+
+input[readonly]{
+color:#00ff99;
+font-weight:bold;
+}
+
+.deposit-btn{
+width:100%;
+padding:16px;
+margin-top:25px;
+border:none;
+border-radius:15px;
+background:linear-gradient(90deg,#9333ea,#c084fc);
+color:white;
+font-size:20px;
+font-weight:bold;
+cursor:pointer;
+transition:.3s;
+}
+
+.deposit-btn:hover{
+transform:scale(1.05);
+box-shadow:0 0 20px #b84dff;
+}
+
+@keyframes rotateBorder{
+100%{
+transform:rotate(360deg);
+}
+}
+/* NAVBAR */
+
+.topbar{
+display:flex;
+align-items:center;
+gap:10px;
+background:#111;
+padding:12px;
+border-radius:20px;
+margin-bottom:25px;
+box-shadow:0 0 15px rgba(184,77,255,.4);
+}
+
+.profile{
+flex:1;
+color:white;
+font-size:20px;
+font-weight:bold;
+white-space:nowrap;
+}
+
+.menu-btn,
+.dashboard-btn,
+.logout-btn{
+border:none;
+background:linear-gradient(135deg,#9333ea,#c084fc);
+color:white;
+padding:12px 12px;
+border-radius:15px;
+font-weight:bold;
+cursor:pointer;
+transition:.2s;
+}
+
+.menu-btn{
+width:50px;
+height:50px;
+font-size:28px;
+padding:0;
+}
+
+.menu-btn:hover,
+.dashboard-btn:hover,
+.logout-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 0 15px #b84dff;
+}
+.note{
+color:#ccc;
+font-size:14px;
+text-align:center;
+margin-top:15px;
+}
+.profile{
+flex:1;
+font-size:18px;
+font-weight:bold;
+color:white;
+}
+.side-menu{
+display:none;
+background:#111;
+border:2px solid #b84dff;
+border-radius:15px;
+margin-top:10px;
+padding:10px;
+box-shadow:0 0 15px rgba(184,77,255,.5);
+}
+
+.side-menu a{
+display:block;
+padding:12px;
+margin:8px 0;
+background:#1a1a1a;
+color:white;
+text-decoration:none;
+border-radius:10px;
+transition:.3s;
+}
+
+.side-menu a:hover{
+background:#9333ea;
+}
+.
+</style>
+</head>
+<body>
+ <div class="topbar">
+
+    <button class="menu-btn" onclick="openMenu()">☰</button>
+
+    <div class="profile">
+        💜 META HUB
+    </div>
+
+    <button class="dashboard-btn">
+        🏠 Dashboard
+    </button>
+
+    <button class="logout-btn">
+        🚪 Logout
+    </button>
+
+</div>
+
+<div id="sideMenu" class="side-menu">
+    <a href="#">📜 Transaction History</a>
+    <a href="#">💸 Withdraw History</a>
+    <a href="#">🚀 Active Plan</a>
+</div>
+
+<div class="deposit-card">
+
+<h2>💜 META HUB DEPOSIT 💜</h2>
+
+<label>📱 Select Payment Method</label>
+
+<select id="paymentMethod" onchange="changeNumber()">
+<option value="jazz cash">jazz cash</option>
+<option value="easypaisa">easy paisa</option>
+</select>
+
+<label>🏦 Payment Number</label>
+
+<input type="text" id="paymentNumber"
+value="03450915768" readonly>
+
+<label>👤 Account Name</label>
+<input type="text" value="META HUB" readonly>
+<label>📦 Selected Plan</label>
+<input type="text" id="planName" readonly>
+
+<label>💰 Plan Amount</label>
+<input type="text" id="planAmount" readonly>
+
+<label>📸 Upload Screenshot</label>
+<input type="file">
+
+<label>📝 Transaction ID</label>
+<input
+type="text"
+id="transactionId"
+placeholder="Enter Transaction ID">
+
+<button class="deposit-btn" onclick="submitDeposit()">
+Submit Deposit Request
+</button>
+<p class="note">
+⚠️ Payment karne ke baad screenshot aur transaction ID submit karein.
+</p>
+</div>
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+
+import { getAuth }
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyAwy6PKOBEti7MYOjHwe8WXV2yFAmLc9sI",
+authDomain: "meta-hub-7fb4b.firebaseapp.com",
+projectId: "meta-hub-7fb4b",
+storageBucket: "meta-hub-7fb4b.firebasestorage.app",
+messagingSenderId: "647396415736",
+appId: "1:647396415736:web:35274b08bee5e283cd830d"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+/* Show Selected Plan */
+
+document.getElementById("planName").value =
+localStorage.getItem("selectedPlan") || "";
+
+document.getElementById("planAmount").value =
+(localStorage.getItem("selectedAmount") || "0") + " PKR";
+
+/* Submit Deposit */
+
+window.submitDeposit = async function(){
+
+const user = auth.currentUser;
+
+if(!user){
+alert("Please Login First");
+return;
+}
+
+const plan =
+localStorage.getItem("selectedPlan");
+
+const amount =
+localStorage.getItem("selectedAmount");
+
+const transactionId =
+document.getElementById("transactionId").value;
+
+if(transactionId === ""){
+alert("Enter Transaction ID");
+return;
+}
+
+try{
+
+await addDoc(
+collection(db,"depositRequests"),
+{
+userId:user.uid,
+email:user.email,
+plan:plan,
+amount:Number(amount),
+transactionId:transactionId,
+status:"pending",
+date:serverTimestamp()
+}
+);
+
+alert(
+"🎉 Your deposit has been submitted successfully.\n\n⏳ Please wait for admin approval.\n\n🚀 Once approved, your selected plan will become active."
+);
+
+document.getElementById("transactionId").value="";
+
+}
+catch(error){
+
+alert(error.message);
+
+}
+
+}
+
+</script>
+
+
+</body>
+</html>

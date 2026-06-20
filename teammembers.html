@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>META HUB Team</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:radial-gradient(circle at top,
+#7b2cff 0%,
+#2b004f 35%,
+#12001f 70%,
+#000 100%);
+color:white;
+min-height:100vh;
+padding:20px;
+}
+
+.header{
+text-align:center;
+margin-bottom:20px;
+}
+
+.header h1{
+font-size:35px;
+text-shadow:
+0 0 10px #c084fc,
+0 0 20px #9333ea;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+margin-bottom:20px;
+}
+
+.card{
+background:#111;
+padding:20px;
+border-radius:20px;
+text-align:center;
+box-shadow:0 0 15px rgba(147,51,234,.5);
+}
+
+.card h3{
+color:#c084fc;
+margin-bottom:10px;
+}
+
+.card h2{
+font-size:30px;
+}
+
+.referral-box{
+background:#111;
+padding:20px;
+border-radius:20px;
+margin-bottom:20px;
+box-shadow:0 0 15px rgba(147,51,234,.5);
+}
+
+.referral-box h3{
+margin-bottom:10px;
+}
+
+.ref-row{
+display:flex;
+gap:10px;
+}
+
+.ref-row input{
+flex:1;
+padding:12px;
+border:none;
+border-radius:10px;
+background:#222;
+color:white;
+}
+
+.ref-row button{
+padding:12px 20px;
+border:none;
+border-radius:10px;
+background:#9333ea;
+color:white;
+cursor:pointer;
+}
+
+.team-list{
+background:#111;
+padding:20px;
+border-radius:20px;
+box-shadow:0 0 15px rgba(147,51,234,.5);
+}
+
+.team-member{
+background:#1b1b1b;
+padding:15px;
+border-radius:15px;
+margin-bottom:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.status{
+color:#00ff88;
+font-weight:bold;
+}
+
+.popup{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.8);
+justify-content:center;
+align-items:center;
+}
+
+.popup-content{
+background:#111;
+padding:25px;
+border-radius:20px;
+text-align:center;
+width:300px;
+box-shadow:
+0 0 20px #9333ea,
+0 0 40px #c084fc;
+}
+
+.popup-content button{
+margin-top:15px;
+padding:10px 20px;
+border:none;
+border-radius:10px;
+background:#9333ea;
+color:white;
+}
+
+@media(max-width:768px){
+.stats{
+grid-template-columns:1fr;
+}
+}
+.topbar{
+background:#111;
+padding:15px;
+border-radius:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+box-shadow:0 0 20px rgba(180,70,255,.4);
+}
+
+.menu-btn{
+background:linear-gradient(135deg,#9333ea,#c084fc);
+border:none;
+color:white;
+padding:10px 18px;
+border-radius:12px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.logo{
+font-size:22px;
+font-weight:bold;
+text-shadow:
+0 0 10px #c084fc,
+0 0 20px #9333ea;
+}
+
+</style>
+</head>
+<body>
+  <div class="topbar">
+
+<button class="menu-btn" onclick="history.back()">
+⬅ Back
+</button>
+
+<div class="logo">
+💜 META HUB
+</div>
+
+<button class="menu-btn" onclick="window.location.href='dashboard.html'">
+🏠 Home
+</button>
+
+</div>
+
+<div class="header">
+<h1>👥 META HUB Team</h1>
+</div>
+
+<div class="stats">
+
+<div class="card">
+<h3>Total Team Members</h3>
+<h2>0</h2>
+</div>
+
+<div class="card">
+<h3>Active Members</h3>
+<h2>0</h2>
+</div>
+
+<div class="card">
+<h3>Referral Count</h3>
+<h2>0</h2>
+</div>
+
+<div class="card">
+<h3>Referral Rewards</h3>
+<h2>0 PKR</h2>
+</div>
+
+</div>
+
+<div class="referral-box">
+
+<h3>🔗 Your Referral Link</h3>
+
+<div class="ref-row">
+
+<input
+type="text"
+id="refLink"
+value="https://metahub.com/register?ref=user123"
+readonly>
+
+<button onclick="copyLink()">
+Copy
+</button>
+
+</div>
+
+</div>
+
+<div class="team-list">
+
+<h3 style="margin-bottom:15px;">
+👥 Team Members List
+</h3>
+
+<div class="team-member">
+<span>User 1</span>
+<span class="status">Active</span>
+</div>
+
+<div class="team-member">
+<span>User 2</span>
+<span class="status">Active</span>
+</div>
+
+<div class="team-member">
+<span>User 3</span>
+<span style="color:orange;">Pending</span>
+</div>
+
+</div>
+
+<div id="popup" class="popup">
+
+<div class="popup-content">
+
+<h2>✅ Success</h2>
+
+<p>
+Referral link copied successfully!
+</p>
+
+<button onclick="closePopup()">
+OK
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+function copyLink(){
+
+let copyText =
+document.getElementById("refLink");
+
+copyText.select();
+
+document.execCommand("copy");
+
+document.getElementById(
+"popup"
+).style.display="flex";
+
+}
+
+function closePopup(){
+
+document.getElementById(
+"popup"
+).style.display="none";
+
+}
+
+</script>
+
+</body>
+</html>

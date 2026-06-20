@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>META HUB Register</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(-45deg,#000000,#2a0050,#5b00a5,#000000);
+background-size:400% 400%;
+animation:bgMove 10s ease infinite;
+overflow:hidden;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.container{
+width:100%;
+max-width:420px;
+padding:20px;
+}
+
+/* META HUB */
+
+.logo-container{
+position:relative;
+width:220px;
+height:220px;
+margin:0 auto 20px;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.logo{
+color:white;
+font-size:34px;
+font-weight:bold;
+text-align:center;
+text-shadow:
+0 0 10px #fff,
+0 0 20px #b84dff,
+0 0 40px #b84dff,
+0 0 80px #b84dff;
+z-index:5;
+animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+50%{
+transform:scale(1.05);
+}
+}
+
+.ring{
+position:absolute;
+width:220px;
+height:220px;
+border-radius:50%;
+border-top:5px solid #ffffff;
+border-bottom:5px solid #b84dff;
+border-left:5px solid transparent;
+border-right:5px solid transparent;
+animation:spin 3s linear infinite;
+}
+
+.ring2{
+position:absolute;
+width:180px;
+height:180px;
+border-radius:50%;
+border-top:4px solid #b84dff;
+border-bottom:4px solid white;
+border-left:4px solid transparent;
+border-right:4px solid transparent;
+animation:spinReverse 2s linear infinite;
+}
+
+.ring3{
+position:absolute;
+width:140px;
+height:140px;
+border-radius:50%;
+border-top:3px solid #ffffff;
+border-bottom:3px solid #b84dff;
+border-left:3px solid transparent;
+border-right:3px solid transparent;
+animation:spin 4s linear infinite;
+}
+
+@keyframes spin{
+100%{
+transform:rotate(360deg);
+}
+}
+
+@keyframes spinReverse{
+100%{
+transform:rotate(-360deg);
+}
+}
+
+/* Form */
+
+.form-box{
+background:#090909;
+border:2px solid #b84dff;
+border-radius:30px;
+padding:30px;
+box-shadow:
+0 0 20px #b84dff,
+0 0 50px rgba(184,77,255,.6);
+animation:floatBox 4s ease-in-out infinite;
+}
+
+@keyframes floatBox{
+0%,100%{
+transform:translateY(0);
+}
+50%{
+transform:translateY(-8px);
+}
+}
+
+.form-box h1{
+text-align:center;
+color:#b84dff;
+font-size:38px;
+margin-bottom:25px;
+}
+
+input{
+width:100%;
+padding:15px;
+margin:10px 0;
+border:none;
+outline:none;
+border-radius:12px;
+background:#222;
+color:white;
+font-size:16px;
+transition:.3s;
+}
+
+input:focus{
+box-shadow:
+0 0 10px #b84dff,
+0 0 20px #b84dff;
+}
+
+button{
+width:100%;
+padding:15px;
+margin-top:15px;
+border:none;
+border-radius:12px;
+background:linear-gradient(90deg,#9333ea,#c084fc);
+color:white;
+font-size:20px;
+font-weight:bold;
+cursor:pointer;
+animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+from{
+box-shadow:0 0 10px #b84dff;
+}
+to{
+box-shadow:0 0 30px #c084fc;
+}
+}
+
+button:hover{
+transform:scale(1.03);
+}
+
+p{
+text-align:center;
+margin-top:20px;
+color:white;
+font-size:18px;
+}
+
+a{
+color:#c084fc;
+text-decoration:none;
+font-weight:bold;
+}
+
+a:hover{
+text-shadow:0 0 10px #c084fc;
+}
+
+@media(max-width:480px){
+
+.logo-container{
+width:180px;
+height:180px;
+}
+
+.ring{
+width:180px;
+height:180px;
+}
+
+.ring2{
+width:150px;
+height:150px;
+}
+
+.ring3{
+width:120px;
+height:120px;
+}
+
+.logo{
+font-size:28px;
+}
+
+.form-box h1{
+font-size:32px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo-container">
+
+<div class="ring"></div>
+<div class="ring2"></div>
+<div class="ring3"></div>
+
+<div class="logo">
+META<br>HUB
+</div>
+
+</div>
+
+<div class="form-box">
+
+<h1>Create Account</h1>
+
+<input type="text" id="username" placeholder="Username">
+
+<input type="email" id="email" placeholder="Email">
+
+<input type="password" id="password" placeholder="Password">
+
+<input type="text" id="referralCode" placeholder="Referral Code (Optional)">
+
+<button onclick="register()">Register</button>
+
+<p>
+Already have an account?
+<a href="login.html">Login</a>
+</p>
+
+</div>
+
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+
+import {
+getAuth,
+createUserWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+import {
+getFirestore,
+doc,
+setDoc,
+collection,
+query,
+where,
+getDocs,
+updateDoc,
+increment
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyAwy6PKOBEti7MYOjHwe8WXV2yFAmLc9sI",
+authDomain: "meta-hub-7fb4b.firebaseapp.com",
+projectId: "meta-hub-7fb4b",
+storageBucket: "meta-hub-7fb4b.firebasestorage.app",
+messagingSenderId: "647396415736",
+appId: "1:647396415736:web:35274b08bee5e283cd830d"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const urlParams =
+new URLSearchParams(window.location.search);
+
+const ref =
+urlParams.get("ref");
+
+window.addEventListener("DOMContentLoaded",()=>{
+
+const urlParams =
+new URLSearchParams(window.location.search);
+
+const ref =
+urlParams.get("ref");
+
+const refInput =
+document.getElementById("referralCode");
+
+if(ref && refInput){
+
+refInput.value = ref;
+
+}
+
+});
+
+window.register = async function(){
+
+const username =
+document.getElementById("username").value;
+
+const email =
+document.getElementById("email").value;
+
+const password =
+document.getElementById("password").value;
+
+const referralCode =
+document.getElementById("referralCode").value.trim();
+
+try{
+
+const userCredential =
+await createUserWithEmailAndPassword(
+auth,
+email,
+password
+);
+
+const user = userCredential.user;
+
+// User Save
+
+await setDoc(doc(db,"users",user.uid),{
+
+username: username,
+email: email,
+
+balance: 0,
+depositBalance: 0,
+withdrawBalance: 0,
+
+referralCount: 0,
+teamMembers: 0,
+referralRewards: 0,
+
+totalDeposit: 0,
+totalWithdraw: 0,
+
+activePlan: "None",
+firstDepositBonusGiven: false,
+
+referralCode:
+user.uid.substring(0,6),
+
+referredBy:
+referralCode || "none"
+
+});
+
+// Team Count Update
+
+if(referralCode){
+
+const q = query(
+collection(db,"users"),
+where("referralCode","==",referralCode)
+);
+
+const querySnapshot =
+await getDocs(q);
+
+if(!querySnapshot.empty){
+
+const referrerDoc =
+querySnapshot.docs[0];
+
+await updateDoc(
+doc(db,"users",referrerDoc.id),
+{
+teamMembers: increment(1),
+referralCount: increment(1)
+}
+);
+
+}
+
+}
+
+alert("✅ Account Created Successfully");
+
+window.location.href =
+"login.html";
+
+}catch(error){
+
+console.log(error);
+
+alert("❌ ERROR: " + error.message);
+
+}
+
+}
+</script>
+
+</body>
+</html>

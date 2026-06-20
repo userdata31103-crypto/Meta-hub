@@ -1,0 +1,304 @@
+<!Doctype.html>
+<html lang="eng">
+  <head> 
+       <title>Profit</title>
+<style>
+  body{
+background:linear-gradient(
+135deg,
+#000000,
+#12001f,
+#2b004f,
+#6a0dad
+);
+min-height:100vh;
+padding:20px;
+font-family:Arial,sans-serif;
+color:white;
+}
+
+h1{
+text-align:center;
+color:#d8b4fe;
+margin-bottom:25px;
+text-shadow:
+0 0 10px #9333ea,
+0 0 25px #9333ea;
+}
+
+.container{
+max-width:500px;
+margin:auto;
+}
+
+.card{
+background:rgba(255,255,255,.05);
+backdrop-filter:blur(15px);
+border:1px solid rgba(192,132,252,.3);
+border-radius:20px;
+padding:20px;
+margin-bottom:15px;
+text-align:center;
+transition:.4s;
+animation:fadeUp .8s ease;
+}
+
+.card:hover{
+transform:translateY(-5px);
+box-shadow:
+0 0 20px #9333ea,
+0 0 40px #9333ea;
+}
+
+.card h3{
+color:#c084fc;
+margin-bottom:10px;
+}
+
+.card p{
+font-size:20px;
+font-weight:bold;
+}
+
+#claimBtn{
+width:100%;
+padding:15px;
+border:none;
+border-radius:15px;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+background:#9333ea;
+color:white;
+transition:.3s;
+}
+
+#claimBtn:hover{
+transform:scale(1.03);
+box-shadow:
+0 0 20px #9333ea,
+0 0 40px #9333ea;
+}
+
+.back-btn{
+display:inline-block;
+padding:10px 18px;
+background:rgba(147,51,234,.25);
+border:1px solid #9333ea;
+border-radius:10px;
+color:white;
+text-decoration:none;
+margin-bottom:20px;
+}
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+</style>
+</head>
+<body>
+
+<a href="dashboard.html" class="back-btn">
+⬅ Back
+</a>
+
+<h1>💎 Daily Profit</h1>
+
+<div class="container">
+
+<div class="card">
+<h3>🚀 Active Plan</h3>
+<p id="activePlan">Loading...</p>
+</div>
+
+<div class="card">
+<h3>💰 Deposit Balance</h3>
+<p id="depositBalance">0 PKR</p>
+</div>
+
+<div class="card">
+<h3>📈 Today's Profit</h3>
+<p id="dailyProfit">0 PKR</p>
+</div>
+
+<button id="claimBtn">
+🎁 Claim Profit
+</button>
+
+</div>
+<script type="module">
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+
+import {
+getFirestore,
+doc,
+getDoc,
+updateDoc
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+import {
+getAuth,
+onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyAwy6PKOBEti7MYOjHwe8WXV2yFAmLc9sI",
+authDomain: "meta-hub-7fb4b.firebaseapp.com",
+projectId: "meta-hub-7fb4b",
+storageBucket: "meta-hub-7fb4b.firebasestorage.app",
+messagingSenderId: "647396415736",
+appId: "1:647396415736:web:35274b08bee5e283cd830d",
+measurementId: "G-38ZS32MX20"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, async(user)=>{
+
+if(!user){
+window.location.href = "login.html";
+return;
+}
+
+const userRef = doc(db,"users",user.uid);
+const userSnap = await getDoc(userRef);
+
+if(!userSnap.exists()){
+alert("❌ User Data Not Found");
+return;
+}
+
+const data = userSnap.data();
+
+document.getElementById("activePlan").innerText =
+data.activePlan || "No Plan";
+
+document.getElementById("depositBalance").innerText =
+(data.depositBalance || 0) + " PKR";
+
+let profit = 0;
+
+switch(data.activePlan){
+
+case "Basic Plan":
+profit = 25;
+break;
+
+case "starter plan":
+profit = 90;
+break;
+
+case "silver plan":
+profit = 180;
+break;
+
+case "gold plan":
+profit = 200;
+break;
+
+case "Diamond plan":
+profit = 259;
+break;
+
+case "vip plan":
+profit = 500;
+break;
+
+case "premium plan":
+profit = 1050;
+break;
+
+case "Elite plan ":
+profit = 1600;
+break;
+
+case "royal plan":
+profit = 2200;
+break;
+
+case "Premium plan":
+profit = 3400;
+break;
+
+case "Mega plan":
+profit = 6000;
+break;
+
+case "ultimate plan":
+profit = 12500;
+break;
+
+case "Meta hub special":
+profit = 26000;
+break;
+
+case "chair man ":
+profit = 70000;
+break;
+
+case "legend plan":
+profit = 150000;
+break;
+
+default:
+profit = 0;
+}
+
+document.getElementById("dailyProfit").innerText =
+profit + " PKR";
+
+const claimBtn =
+document.getElementById("claimBtn");
+
+claimBtn.addEventListener("click", async()=>{
+
+if(!data.activePlan || data.activePlan === "No Plan"){
+
+alert("❌ No Active Plan Found");
+return;
+
+}
+
+const today =
+new Date().toDateString();
+
+if(data.lastClaimDate === today){
+
+alert("❌ You already claimed today's profit");
+return;
+
+}
+
+await updateDoc(userRef,{
+
+balance:
+Number(data.balance || 0) + profit,
+
+lastClaimDate: today
+
+});
+
+alert("✅ Profit Claimed Successfully");
+
+location.reload();
+
+});
+
+});
+
+</script>
+
+</body>
+</html>

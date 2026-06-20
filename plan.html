@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>META HUB Plans</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:linear-gradient(to bottom,#6a0dad,#2b004f,#000);
+min-height:100vh;
+padding:15px;
+}
+
+/* Navbar */
+
+.topbar{
+display:flex;
+align-items:center;
+gap:10px;
+background:rgba(255,255,255,.08);
+padding:12px;
+border-radius:20px;
+margin-bottom:25px;
+}
+
+.profile{
+flex:1;
+color:white;
+font-size:20px;
+font-weight:bold;
+}
+
+.menu-btn,
+.dashboard-btn,
+.logout-btn{
+border:none;
+background:linear-gradient(135deg,#9333ea,#c084fc);
+color:white;
+padding:12px 16px;
+border-radius:15px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.menu-btn{
+width:60px;
+height:60px;
+font-size:28px;
+}
+
+/* Side Menu */
+
+.side-menu{
+position:fixed;
+top:0;
+left:-300px;
+width:280px;
+height:100%;
+background:#111;
+padding-top:70px;
+transition:.4s;
+z-index:999;
+}
+
+.side-menu h2{
+color:white;
+padding:20px;
+}
+
+.side-menu a{
+display:block;
+padding:15px 20px;
+color:white;
+text-decoration:none;
+}
+
+.side-menu a:hover{
+background:#9333ea;
+}
+
+.close-btn{
+position:absolute;
+right:20px;
+top:15px;
+font-size:30px;
+color:white;
+cursor:pointer;
+}
+
+/* Title */
+
+.title{
+text-align:center;
+background:#000;
+color:white;
+padding:20px;
+border-radius:20px;
+font-size:35px;
+margin-bottom:15px;
+box-shadow:0 0 20px #b84dff;
+}
+
+.subtitle{
+text-align:center;
+color:white;
+font-size:22px;
+margin-bottom:25px;
+}
+
+/* Plans */
+
+.plans{
+display:grid;
+gap:20px;
+}
+
+.plan{
+background:#111;
+border:3px solid #b84dff;
+border-radius:25px;
+padding:25px;
+text-align:center;
+box-shadow:0 0 15px rgba(184,77,255,.4);
+}
+
+.plan h2{
+color:#c084fc;
+margin-bottom:15px;
+}
+
+.plan p{
+color:white;
+margin:10px 0;
+font-size:18px;
+}
+
+.invest-btn{
+width:100%;
+padding:15px;
+border:none;
+border-radius:15px;
+background:linear-gradient(90deg,#9333ea,#c084fc);
+color:white;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+margin-top:10px;
+}
+/* ===== PLANS SECTION ===== */
+
+plans{
+display:grid;
+gap:20px;
+
+.plan{
+position:relative;
+overflow:hidden;
+background:#111;
+border-radius:25px;
+padding:25px;
+text-align:center;
+transition:.4s;
+box-shadow:0 0 20px rgba(184,77,255,.4);
+}
+
+.plan::before{
+content:"";
+position:absolute;
+width:200%;
+height:200%;
+top:-50%;
+left:-50%;
+background:conic-gradient(
+transparent,
+#b84dff,
+#ffffff,
+#b84dff,
+transparent
+);
+animation:rotateBorder 4s linear infinite;
+}
+
+.plan::after{
+content:"";
+position:absolute;
+inset:3px;
+background:#111;
+border-radius:22px;
+z-index:1;
+}
+
+.plan h2,
+.plan p,
+.plan button{
+position:relative;
+z-index:2;
+}
+
+.plan:hover{
+transform:translateY(-10px);
+box-shadow:0 0 35px #b84dff;
+}
+
+.plan h2{
+color:#c084fc;
+font-size:28px;
+margin-bottom:15px;
+text-shadow:0 0 10px #b84dff;
+}
+
+.plan p{
+color:white;
+font-size:18px;
+margin:10px 0;
+}
+
+.invest-btn{
+width:100%;
+padding:15px;
+margin-top:15px;
+border:none;
+border-radius:15px;
+background:linear-gradient(90deg,#9333ea,#c084fc);
+color:white;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+transition:.3s;
+}
+
+.invest-btn:hover{
+transform:scale(1.05);
+box-shadow:0 0 20px #b84dff;
+}
+
+@keyframes rotateBorder{
+100%{
+transform:rotate(360deg);
+}
+}
+</style>
+
+</head>
+<body>
+
+<div class="topbar">
+<button class="menu-btn" onclick="openMenu()">☰</button>
+
+<div class="profile">
+💜 META HUB
+</div>
+
+<button class="dashboard-btn"
+onclick="window.location.href='dashboard.html'">
+🏠 Dashboard
+</button>
+
+<button class="logout-btn" href="login.html">🚪 Logout</button>
+</div>
+
+<div id="sideMenu" class="side-menu">
+<span class="close-btn" onclick="closeMenu()">✖</span>
+
+<h2>💜 META HUB</h2>
+
+<a href="#">📜 Transaction History</a>
+<a href="#">💸 Withdraw History</a>
+<a href="#">🚀 Active Plan</a>
+</div>
+
+<h1 class="title">💜 META HUB PLANS 💜</h1>
+
+<p class="subtitle">✨🚀 Choose Your Favorite Plan 🚀✨</p>
+
+<div class="plans">
+
+<div class="plan">
+<h2>🟢 Basic Plan</h2>
+<p>💰 Price: 300 PKR</p>
+<p>📈 Daily Profit: 25 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 750PKR</p>
+<button class="invest-btn"
+onclick="selectPlan('Basic Plan',300)">
+🚀 Invest Now
+</button>
+</div>
+
+<div class="plan">
+<h2>🔵 Starter Plan</h2>
+<p>💰 Price: 500 PKR</p>
+<p>📈 Daily Profit: 90 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 2700 PKR</p>
+<button class="invest-btn"
+onclick="selectPlan('starter plan',500)">
+🚀 Invest Now
+</button>
+</div>
+
+<div class="plan">
+<h2>🟣 Silver Plan</h2>
+<p>💰 Price: 1000 PKR</p>
+<p>📈 Daily Profit: 180 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 5400 PKR</p>
+<button class="invest-btn"
+onclick="selectPlan('silver plan',1000)">
+🚀 Invest Now
+</button>
+</div>
+<div class="plan">
+<h2>💎 Gold Plan</h2>
+<p>💰 Price: 2000 PKR</p>
+<p>📈 Daily Profit: 200 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 6000 PKR</p>
+<button class="invest-btn"
+onclick="selectPlan('gold plan',2000)">
+🚀 Invest Now
+</button>
+</div>
+
+<div class="plan">
+<h2>🔥 Diamond Plan</h2>
+<p>💰 Price: 3000 PKR</p>
+<p>📈 Daily Profit: 259 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 7770 PKR</p>
+<button class="invest-btn"
+onclick="selectPlan('Diamond plan',3000)">
+🚀 Invest Now
+</button>
+</div>
+
+<div class="plan">
+<h2>👑 VIP Plan</h2>
+<p>💰 Price: 5000 PKR</p>
+<p>📈 Daily Profit: 500 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 15000 PKR</p>
+<button class="invest-btn"
+onclick="selectPlan('vip plan',5000)">
+🚀 Invest Now
+</button>
+</div>
+
+<div class="plan">
+<h2>🚀 Premium Plan</h2>
+<p>💰 Price: 10000 PKR</p>
+<p>📈 Daily Profit: 1050 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 31500 PKR</p>
+<button class="invest-btn"
+onclick="selectPlan('premium plan',10000)">
+🚀 Invest Now
+</button>
+</div>
+
+<div class="plan">
+<h2>🌟 Elite Plan</h2>
+<p>💰 Price: 15000 PKR</p>
+<p>📈 Daily Profit: 1600 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 48000 PKR</p>
+<button class="invest-btn"
+onclick="selectPlan('Elite plan ',15000)">
+🚀 Invest Now
+</button>
+</div>
+
+<div class="plan">
+<h2>🏆 Royal Plan</h2>
+<p>💰 Price: 20000 PKR</p>
+<p>📈 Daily Profit: 2200 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 66000 PKR</p>
+<button class="invest-btn"
+onclick="selectPlan('royal plan',20000)">
+🚀 Invest Now
+</button>
+</div>
+
+<div class="plan">
+<h2>💠 Platinum Plan</h2>
+<p>💰 Price: 30000 PKR</p>
+<p>📈 Daily Profit: 3400 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 102000 PKR</p>
+<button class="invest-btn"
+onclick="selectPlan('Premium plan',30000)">
+🚀 Invest Now
+</button>
+</div>
+
+<div class="plan">
+<h2>⚡ Mega Plan</h2>
+<p>💰 Price: 50000 PKR</p>
+<p>📈 Daily Profit: 6000 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 180000 PKR</p>
+<button class="invest-btn"
+onclick="selectPlan('Mega plan',50000)">
+🚀 Invest Now
+</button>
+</div>
+
+<div class="plan">
+<h2>🌈 Ultimate Plan</h2>
+<p>💰 Price: 100000 PKR</p>
+<p>📈 Daily Profit: 12500 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 375000 PKR</p>
+<button class="invest-btn"
+onclick="selectPlan('ultimate plan',100000)">
+🚀 Invest Now
+</button>
+</div>
+
+<div class="plan">
+<h2>💜 META HUB Special</h2>
+<p>💰 Price: 200000 PKR</p>
+<p>📈 Daily Profit: 26000 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 780000 PKR</p>
+<button class="invest-btn"
+onclick="selectPlan('Meta hub special',200000)">
+🚀 Invest Now
+</button>
+</div>
+
+<div class="plan">
+<h2>👑 Chairman Plan</h2>
+<p>💰 Price: 500000 PKR</p>
+<p>📈 Daily Profit: 70000 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 2100000 PKR</p>
+<button class="invest-btn"
+onclick="selectPlan('chair man ',500000)">
+🚀 Invest Now
+</button>
+</div>
+
+<div class="plan">
+<h2>🔥 Legend Plan</h2>
+<p>💰 Price: 1000000 PKR</p>
+<p>📈 Daily Profit: 150000 PKR</p>
+<p>📅 Duration: 30 Days</p>
+<p>🎯 Total Return: 4500000 PKR</p>
+<button class="invest-btn"
+onclick="selectPlan('legend plan',1000000)">
+🚀 Invest Now
+</button>
+</div>
+</div>
+
+</div>
+
+<script>
+function openMenu(){
+document.getElementById("sideMenu").style.left="0";
+}
+function closeMenu(){
+document.getElementById("sideMenu").style.left="-300px";
+}
+function selectPlan(planName, amount){
+
+localStorage.setItem("selectedPlan", planName);
+
+localStorage.setItem("selectedAmount", amount);
+
+
+window.location.href = "deposit.html";
+
+}
+
+</script>
+
+</body>
+</html>

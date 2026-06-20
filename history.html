@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deposit History</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:linear-gradient(
+135deg,
+#000000,
+#12001f,
+#2b004f,
+#6a0dad
+);
+min-height:100vh;
+padding:20px;
+color:white;
+overflow-x:hidden;
+}
+
+h1{
+text-align:center;
+font-size:32px;
+margin-bottom:25px;
+color:#d8b4fe;
+text-shadow:
+0 0 10px #9333ea,
+0 0 20px #9333ea,
+0 0 40px #9333ea;
+animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+
+from{
+text-shadow:
+0 0 10px #9333ea;
+}
+
+to{
+text-shadow:
+0 0 25px #c084fc,
+0 0 50px #c084fc;
+}
+
+}
+
+.card{
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(15px);
+border:1px solid rgba(192,132,252,0.3);
+border-radius:20px;
+padding:20px;
+margin-bottom:15px;
+
+box-shadow:
+0 0 15px rgba(147,51,234,.3);
+
+animation:fadeUp .7s ease;
+transition:.4s;
+}
+
+.card:hover{
+
+transform:
+translateY(-5px)
+scale(1.02);
+
+box-shadow:
+0 0 20px #9333ea,
+0 0 40px #9333ea;
+
+}
+
+.card h3{
+color:#c084fc;
+margin-bottom:10px;
+font-size:22px;
+}
+
+.card p{
+margin:6px 0;
+font-size:16px;
+}
+
+.approved{
+color:#00ff99;
+font-weight:bold;
+}
+
+.pending{
+color:#ffd700;
+font-weight:bold;
+}
+
+.rejected{
+color:#ff4d4d;
+font-weight:bold;
+}
+
+@keyframes fadeUp{
+
+from{
+opacity:0;
+transform:
+translateY(30px);
+}
+
+to{
+opacity:1;
+transform:
+translateY(0);
+}
+
+}
+
+::-webkit-scrollbar{
+width:8px;
+}
+
+::-webkit-scrollbar-thumb{
+background:#9333ea;
+border-radius:20px;
+}
+.back-btn{
+display:inline-block;
+padding:12px 20px;
+background:rgba(147,51,234,0.25);
+border:1px solid #9333ea;
+border-radius:12px;
+color:white;
+text-decoration:none;
+font-weight:bold;
+margin-bottom:20px;
+transition:.3s;
+backdrop-filter:blur(10px);
+box-shadow:0 0 15px rgba(147,51,234,.3);
+}
+
+.back-btn:hover{
+transform:translateX(-5px);
+box-shadow:
+0 0 20px #9333ea,
+0 0 40px #9333ea;
+}
+</style>
+</head>
+
+<body>
+  <a href="dashboard.html" class="back-btn">
+    ⬅ Back
+</a>
+
+<h1>💎 Deposit History</h1>
+
+<div id="historyList"></div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+query,
+where,
+getDocs
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+import {
+getAuth,
+onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAwy6PKOBEti7MYOjHwe8WXV2yFAmLc9sI",
+  authDomain: "meta-hub-7fb4b.firebaseapp.com",
+  projectId: "meta-hub-7fb4b",
+  storageBucket: "meta-hub-7fb4b.firebasestorage.app",
+  messagingSenderId: "647396415736",
+  appId: "1:647396415736:web:35274b08bee5e283cd830d",
+  measurementId: "G-38ZS32MX20"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, async(user)=>{
+
+if(!user){
+window.location.href="login.html";
+return;
+}
+
+const q = query(
+collection(db,"depositRequests"),
+where("userId","==",user.uid)
+);
+
+const snapshot = await getDocs(q);
+
+const historyList =
+document.getElementById("historyList");
+
+historyList.innerHTML="";
+
+snapshot.forEach((docSnap)=>{
+
+const data = docSnap.data();
+
+let statusClass="pending";
+
+if(data.status==="approved"){
+statusClass="approved";
+}
+
+if(data.status==="rejected"){
+statusClass="rejected";
+}
+
+historyList.innerHTML += `
+<div class="card">
+
+<h3>📦 ${data.plan}</h3>
+
+<p>💰 ${data.amount} PKR</p>
+
+<p class="${statusClass}">
+${data.status}
+</p>
+
+</div>
+`;
+
+});
+
+});
+
+</script>
+
+</body>
+</html>
