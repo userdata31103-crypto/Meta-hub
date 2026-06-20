@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>META HUB ADMIN</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#000;
+color:white;
+padding:20px;
+}
+
+h1{
+text-align:center;
+color:#c084fc;
+margin-bottom:20px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px;
+margin-bottom:25px;
+}
+
+.card{
+background:#111;
+border:2px solid #9333ea;
+border-radius:15px;
+padding:20px;
+text-align:center;
+}
+
+.card h2{
+font-size:35px;
+color:#c084fc;
+}
+
+.request-card{
+background:#111;
+border:1px solid #9333ea;
+padding:15px;
+margin:10px 0;
+border-radius:10px;
+}
+
+button{
+padding:10px 15px;
+margin:5px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.approve{
+background:green;
+color:white;
+}
+
+.reject{
+background:red;
+color:white;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>👑 META HUB ADMIN PANEL</h1>
+<div style="
+background:#111;
+border:2px solid #9333ea;
+padding:15px;
+border-radius:12px;
+margin-bottom:20px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+color:#c084fc;
+">
+
+🔔 Notifications:
+<span id="notifCount">0</span>
+
+</div>
+
+<div class="stats">
+
+<div class="card">
+<h2 id="usersCount">0</h2>
+<p>Total Users</p>
+</div>
+
+<div class="card">
+<h2 id="depositCount">0</h2>
+<p>Deposit Requests</p>
+</div>
+
+<div class="card">
+<h2 id="withdrawCount">0</h2>
+<p>Withdraw Requests</p>
+</div>
+
+</div>
+
+<h2>💰 Deposit Requests</h2>
+<div id="depositRequests"></div>
+
+<h2>💸 Withdraw Requests</h2>
+<div id="withdrawRequests"></div>
+
+<script type="module">
+
+const pass = prompt("Enter Admin Password");
+
+if(pass !== "jani"){
+document.body.innerHTML = "<h1>❌ Access Denied</h1>";
+throw new Error("Access Denied");
+}
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+getDocs,
+doc,
+updateDoc,
+getDoc,
+query,
+where,
+increment,
+onSnapshot
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAwy6PKOBEti7MYOjHwe8WXV2yFAmLc9sI",
+  authDomain: "meta-hub-7fb4b.firebaseapp.com",
+  projectId: "meta-hub-7fb4b",
+  storageBucket: "meta-hub-7fb4b.firebasestorage.app",
+  messagingSenderId: "647396415736",
+  appId: "1:647396415736:web:35274b08bee5e283cd830d",
+  measurementId: "G-38ZS32MX20"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let depositPending = 0;
+let withdrawPending = 0;
+
+function updateNotification(){
+document.getElementById("notifCount").innerText =
+depositPending + withdrawPending;
+}
+
+function startNotifications(){
+
+const depositQ = query(
+collection(db,"depositRequests"),
+where("status","==","pending")
+);
+
+const withdrawQ = query(
+collection(db,"withdrawRequests"),
+where("status","==","pending")
+);
+
+onSnapshot(depositQ,(snap)=>{
+depositPending = snap.size;
+updateNotification();
+});
+
+onSnapshot(withdrawQ,(snap)=>{
+withdrawPending = snap.size;
+updateNotification();
+});
+
+}
+
+async function loadStats(){
+
+const users = await getDocs(collection(db,"users"));
+document.getElementById("usersCount").innerText =
+users.size;
+
+const deposits = await getDocs(
+collection(db,"depositRequests")
+);
+
+document.getElementById("depositCount").innerText =
+deposits.size;
+
+const withdraws = await getDocs(
+collection(db,"withdrawRequests")
+);
+
+document.getElementById("withdrawCount").innerText =
+withdraws.size;
+
+}
+
+async function loadDeposits(){
+
+const container =
+document.getElementById("depositRequests");
+
+container.innerHTML = "";
+
+const q = query(
+collection(db,"depositRequests"),
+where("status","==","pending")
+);
+
+const snapshot = await getDocs(q);
+
+if(snapshot.empty){
+container.innerHTML =
+"<p>No Pending Deposits</p>";
+return;
+}
+
+snapshot.forEach((docSnap)=>{
+
+const data = docSnap.data();
+
+container.innerHTML += `
+<div class="request-card">
+
+<h3>${data.email || "No Email"}</h3>
+
+<p>Plan: ${data.plan || "-"}</p>
+
+<p>Amount: ${data.amount || 0}</p>
+
+<button class="approve"
+onclick="approveDeposit('${docSnap.id}')">
+Approve
+</button>
+
+<button class="reject"
+onclick="rejectDeposit('${docSnap.id}')">
+Reject
+</button>
+
+</div>
+`;
+
+});
+
+}
+
+async function loadWithdraws(){
+
+const container =
+document.getElementById("withdrawRequests");
+
+container.innerHTML = "";
+
+const q = query(
+collection(db,"withdrawRequests"),
+where("status","==","pending")
+);
+
+const snapshot = await getDocs(q);
+
+if(snapshot.empty){
+container.innerHTML =
+"<p>No Pending Withdraws</p>";
+return;
+}
+
+snapshot.forEach((docSnap)=>{
+
+const data = docSnap.data();
+
+container.innerHTML += `
+<div class="request-card">
+
+<h3>${data.email || "No Email"}</h3>
+
+<p>Method: ${data.method || "-"}</p>
+
+<p>Account: ${data.accountNumber || "-"}</p>
+
+<p>Amount: ${data.amount || 0}</p>
+
+<button class="approve"
+onclick="approveWithdraw('${docSnap.id}')">
+Approve
+</button>
+
+<button class="reject"
+onclick="rejectWithdraw('${docSnap.id}')">
+Reject
+</button>
+
+</div>
+`;
+
+});
+
+}
+
+window.approveDeposit = async (id)=>{
+
+const depositRef =
+doc(db,"depositRequests",id);
+
+const depositSnap =
+await getDoc(depositRef);
+
+if(!depositSnap.exists()) return;
+
+const depositData = depositSnap.data();
+
+const userRef =
+doc(db,"users",depositData.userId);
+
+const userSnap =
+await getDoc(userRef);
+
+if(!userSnap.exists()) return;
+
+const userData = userSnap.data();
+
+await updateDoc(userRef,{
+activePlan: depositData.plan,
+
+depositBalance:
+Number(userData.depositBalance || 0) +
+Number(depositData.amount || 0),
+
+totalDeposit:
+Number(userData.totalDeposit || 0) +
+Number(depositData.amount || 0)
+});
+
+await updateDoc(depositRef,{
+status:"approved"
+});
+
+if(
+userData.referredBy &&
+userData.referredBy !== "none" &&
+!userData.firstDepositBonusGiven
+){
+
+const q = query(
+collection(db,"users"),
+where("referralCode","==",
+userData.referredBy)
+);
+
+const refSnap = await getDocs(q);
+
+if(!refSnap.empty){
+
+const refDoc = refSnap.docs[0];
+
+await updateDoc(
+doc(db,"users",refDoc.id),
+{
+balance: increment(50),
+referralRewards: increment(50)
+}
+);
+
+await updateDoc(userRef,{
+firstDepositBonusGiven:true
+});
+
+}
+
+}
+
+alert("✅ Deposit Approved");
+
+loadStats();
+loadDeposits();
+loadWithdraws();
+
+};
+
+window.rejectDeposit = async(id)=>{
+
+await updateDoc(
+doc(db,"depositRequests",id),
+{
+status:"rejected"
+}
+);
+
+loadStats();
+loadDeposits();
+
+};
+
+window.approveWithdraw = async(id)=>{
+
+const withdrawRef =
+doc(db,"withdrawRequests",id);
+
+const withdrawSnap =
+await getDoc(withdrawRef);
+
+if(!withdrawSnap.exists()) return;
+
+const withdrawData =
+withdrawSnap.data();
+
+const userRef =
+doc(db,"users",withdrawData.userId);
+
+const userSnap =
+await getDoc(userRef);
+
+if(!userSnap.exists()) return;
+
+const userData = userSnap.data();
+
+const balance =
+Number(userData.depositBalance || 0);
+
+const amount =
+Number(withdrawData.amount || 0);
+
+if(amount > balance){
+alert("❌ Insufficient Balance");
+return;
+}
+
+await updateDoc(userRef,{
+depositBalance: balance - amount,
+
+totalWithdraw:
+Number(userData.totalWithdraw || 0)
++ amount
+});
+
+await updateDoc(withdrawRef,{
+status:"approved"
+});
+
+alert("✅ Withdraw Approved");
+
+loadStats();
+loadDeposits();
+loadWithdraws();
+
+};
+
+window.rejectWithdraw = async(id)=>{
+
+await updateDoc(
+doc(db,"withdrawRequests",id),
+{
+status:"rejected"
+}
+);
+
+loadStats();
+loadWithdraws();
+
+};
+
+loadStats();
+loadDeposits();
+loadWithdraws();
+startNotifications();
+
+</script>
+
+</body>
+</html>
