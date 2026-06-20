@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>META HUB Register</title>
+<title>META HUB Login</title>
 
 <style>
 
@@ -37,7 +37,7 @@ max-width:420px;
 padding:20px;
 }
 
-/* META HUB */
+/* META HUB LOGO */
 
 .logo-container{
 position:relative;
@@ -50,6 +50,7 @@ align-items:center;
 }
 
 .logo{
+position:relative;
 color:white;
 font-size:34px;
 font-weight:bold;
@@ -65,7 +66,7 @@ animation:pulse 2s infinite;
 
 @keyframes pulse{
 50%{
-transform:scale(1.05);
+transform:scale(1.08);
 }
 }
 
@@ -74,7 +75,7 @@ position:absolute;
 width:220px;
 height:220px;
 border-radius:50%;
-border-top:5px solid #ffffff;
+border-top:5px solid white;
 border-bottom:5px solid #b84dff;
 border-left:5px solid transparent;
 border-right:5px solid transparent;
@@ -98,7 +99,7 @@ position:absolute;
 width:140px;
 height:140px;
 border-radius:50%;
-border-top:3px solid #ffffff;
+border-top:3px solid white;
 border-bottom:3px solid #b84dff;
 border-left:3px solid transparent;
 border-right:3px solid transparent;
@@ -117,7 +118,7 @@ transform:rotate(-360deg);
 }
 }
 
-/* Form */
+/* LOGIN BOX */
 
 .form-box{
 background:#090909;
@@ -126,7 +127,7 @@ border-radius:30px;
 padding:30px;
 box-shadow:
 0 0 20px #b84dff,
-0 0 50px rgba(184,77,255,.6);
+0 0 50px rgba(184,77,255,.7);
 animation:floatBox 4s ease-in-out infinite;
 }
 
@@ -141,15 +142,17 @@ transform:translateY(-8px);
 
 .form-box h1{
 text-align:center;
+font-size:40px;
 color:#b84dff;
-font-size:38px;
 margin-bottom:25px;
 }
+
+/* INPUT */
 
 input{
 width:100%;
 padding:15px;
-margin:10px 0;
+margin:12px 0;
 border:none;
 outline:none;
 border-radius:12px;
@@ -164,6 +167,8 @@ box-shadow:
 0 0 10px #b84dff,
 0 0 20px #b84dff;
 }
+
+/* BUTTON */
 
 button{
 width:100%;
@@ -192,6 +197,8 @@ button:hover{
 transform:scale(1.03);
 }
 
+/* TEXT */
+
 p{
 text-align:center;
 margin-top:20px;
@@ -208,6 +215,8 @@ font-weight:bold;
 a:hover{
 text-shadow:0 0 10px #c084fc;
 }
+
+/* MOBILE */
 
 @media(max-width:480px){
 
@@ -249,7 +258,6 @@ font-size:32px;
 <div class="container">
 
 <div class="logo-container">
-
 <div class="ring"></div>
 <div class="ring2"></div>
 <div class="ring3"></div>
@@ -257,50 +265,34 @@ font-size:32px;
 <div class="logo">
 META<br>HUB
 </div>
-
 </div>
 
 <div class="form-box">
 
-<h1>Create Account</h1>
+<h1>Login</h1>
 
-<input type="text" id="username" placeholder="Username">
+<input type="email" id="email" placeholder="Enter Email">
 
-<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Enter Password">
 
-<input type="password" id="password" placeholder="Password">
-
-<input type="text" id="referralCode" placeholder="Referral Code (Optional)">
-
-<button onclick="register()">Register</button>
+<button onclick="login()">Login</button>
 
 <p>
-Already have an account?
-<a href="index.html">Login</a>
+Don't have an account?
+<a href="register.html">Register</a>
 </p>
 
 </div>
 
 </div>
 <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
 
 import {
 getAuth,
-createUserWithEmailAndPassword
+signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-
-import {
-getFirestore,
-doc,
-setDoc,
-collection,
-query,
-where,
-getDocs,
-updateDoc,
-increment
-} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 const firebaseConfig = {
 apiKey: "AIzaSyAwy6PKOBEti7MYOjHwe8WXV2yFAmLc9sI",
@@ -313,36 +305,8 @@ appId: "1:647396415736:web:35274b08bee5e283cd830d"
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
-const urlParams =
-new URLSearchParams(window.location.search);
 
-const ref =
-urlParams.get("ref");
-
-window.addEventListener("DOMContentLoaded",()=>{
-
-const urlParams =
-new URLSearchParams(window.location.search);
-
-const ref =
-urlParams.get("ref");
-
-const refInput =
-document.getElementById("referralCode");
-
-if(ref && refInput){
-
-refInput.value = ref;
-
-}
-
-});
-
-window.register = async function(){
-
-const username =
-document.getElementById("username").value;
+window.login = async function(){
 
 const email =
 document.getElementById("email").value;
@@ -350,92 +314,27 @@ document.getElementById("email").value;
 const password =
 document.getElementById("password").value;
 
-const referralCode =
-document.getElementById("referralCode").value.trim();
-
 try{
 
-const userCredential =
-await createUserWithEmailAndPassword(
+await signInWithEmailAndPassword(
 auth,
 email,
 password
 );
 
-const user = userCredential.user;
-
-// User Save
-
-await setDoc(doc(db,"users",user.uid),{
-
-username: username,
-email: email,
-
-balance: 0,
-depositBalance: 0,
-withdrawBalance: 0,
-
-referralCount: 0,
-teamMembers: 0,
-referralRewards: 0,
-
-totalDeposit: 0,
-totalWithdraw: 0,
-
-activePlan: "None",
-firstDepositBonusGiven: false,
-
-referralCode:
-user.uid.substring(0,6),
-
-referredBy:
-referralCode || "none"
-
-});
-
-// Team Count Update
-
-if(referralCode){
-
-const q = query(
-collection(db,"users"),
-where("referralCode","==",referralCode)
-);
-
-const querySnapshot =
-await getDocs(q);
-
-if(!querySnapshot.empty){
-
-const referrerDoc =
-querySnapshot.docs[0];
-
-await updateDoc(
-doc(db,"users",referrerDoc.id),
-{
-teamMembers: increment(1),
-referralCount: increment(1)
-}
-);
-
-}
-
-}
-
-alert("✅ Account Created Successfully");
+alert("Login Successful");
 
 window.location.href =
-"login.html";
+"dashboard.html";
 
 }catch(error){
 
-console.log(error);
-
-alert("❌ ERROR: " + error.message);
+alert(error.message);
 
 }
 
 }
+
 </script>
 
 </body>
