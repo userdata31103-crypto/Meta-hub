@@ -251,6 +251,21 @@ font-size:32px;
 
 }
 
+  #installBtn{
+position:fixed;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+background:#6a0dad;
+color:#fff;
+border:none;
+padding:12px 20px;
+border-radius:10px;
+font-size:16px;
+cursor:pointer;
+z-index:9999;
+  }
+
 </style>
 </head>
 
@@ -337,6 +352,11 @@ alert(error.message);
 }
 
 </script>
+  <button id="installBtn" style="display:none;">
+Install META HUB
+</button>
+
+<script src="main.js"></script>
 
 </body>
 </html>
