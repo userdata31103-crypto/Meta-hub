@@ -258,10 +258,8 @@ value="03423814076" readonly>
 
 <label>💰 Plan Amount</label>
 <input type="text" id="planAmount" readonly>
-
 <label>📸 Upload Screenshot</label>
-<input type="file">
-
+<input type="file" id="screenshot" accept="image/*">
 <label>📝 Transaction ID</label>
 <input
 type="text"
@@ -290,7 +288,13 @@ addDoc,
 serverTimestamp
 }
 from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-
+import {
+getStorage,
+ref,
+uploadBytes,
+getDownloadURL
+}
+from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
 const firebaseConfig = {
 apiKey: "AIzaSyAwy6PKOBEti7MYOjHwe8WXV2yFAmLc9sI",
 authDomain: "meta-hub-7fb4b.firebaseapp.com",
@@ -303,6 +307,7 @@ appId: "1:647396415736:web:35274b08bee5e283cd830d"
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+ const storage = getStorage(app);
 
 /* Show Selected Plan */
 
@@ -331,6 +336,13 @@ localStorage.getItem("selectedAmount");
 
 const transactionId =
 document.getElementById("transactionId").value;
+ const screenshotFile =
+document.getElementById("screenshot").files[0];
+
+if(!screenshotFile){
+alert("Please Upload Screenshot");
+return;
+}
 
 if(transactionId === ""){
 alert("Enter Transaction ID");
@@ -338,6 +350,21 @@ return;
 }
 
 try{
+ const storageRef = ref(
+storage,
+"depositScreenshots/" +
+Date.now() +
+"_" +
+screenshotFile.name
+);
+
+await uploadBytes(
+storageRef,
+screenshotFile
+);
+
+const imageUrl =
+await getDownloadURL(storageRef);
 
 await addDoc(
 collection(db,"depositRequests"),
@@ -347,6 +374,7 @@ email:user.email,
 plan:plan,
 amount:Number(amount),
 transactionId:transactionId,
+ screenshotUrl:imageUrl,
 status:"pending",
 date:serverTimestamp()
 }
