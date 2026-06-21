@@ -308,7 +308,8 @@ text-shadow:
 
 <div class="balance-card">
 <h3>Available Balance</h3>
-<h1>0 PKR</h1>
+  <h1 id="availableBalance">0 PKR</h1>
+
 </div>
 
 <div class="notice-box">
@@ -487,7 +488,8 @@ appId: "1:647396415736:web:35274b08bee5e283cd830d"
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-  auth.onAuthStateChanged(async(user)=>{
+ let userData = {}; 
+auth.onAuthStateChanged(async(user)=>{
 
 if(!user) return;
 
@@ -497,17 +499,14 @@ doc(db,"users",user.uid)
 
 if(userSnap.exists()){
 
-const data = userSnap.data();
+userData = userSnap.data();
 
-document.getElementById(
-"availableBalance"
-).innerText =
-(data.balance || 0) + " PKR";
+document.getElementById("availableBalance").innerText =
+(userData.balance || 0) + " PKR";
 
 }
 
 });
-
 window.submitWithdraw = async function(){
 
 const user = auth.currentUser;
@@ -533,7 +532,7 @@ return;
 
 }
 
-if(amount > (data.depositBalance || 0)){
+if(amount > (userData.balance || 0)){
 
 alert("❌ Insufficient Balance");
 
