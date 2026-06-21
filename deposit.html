@@ -351,6 +351,26 @@ return;
 }
 
 try{
+ alert("A");
+
+const storageRef = ref(
+storage,
+"depositScreenshots/" +
+Date.now() +
+"_" +
+screenshotFile.name
+);
+
+alert("B");
+
+await uploadBytes(storageRef,screenshotFile);
+
+alert("C");
+
+const imageUrl =
+await getDownloadURL(storageRef);
+
+alert("D");
  const storageRef = ref(
 storage,
 "depositScreenshots/" +
