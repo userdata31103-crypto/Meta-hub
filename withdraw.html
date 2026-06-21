@@ -411,10 +411,6 @@ Please wait for admin approval.
 
 <script>
 
-window.submitWithdraw = async function(){
-...
-
-
 let accountName =
 document.getElementById("accountName").value;
 
@@ -468,14 +464,16 @@ from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
 
 import { getAuth }
 from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-
 import {
 getFirestore,
 collection,
 addDoc,
-serverTimestamp
+serverTimestamp,
+getDoc,
+doc
 }
 from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
 
 const firebaseConfig = {
 apiKey: "AIzaSyAwy6PKOBEti7MYOjHwe8WXV2yFAmLc9sI",
@@ -489,6 +487,26 @@ appId: "1:647396415736:web:35274b08bee5e283cd830d"
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+  auth.onAuthStateChanged(async(user)=>{
+
+if(!user) return;
+
+const userSnap = await getDoc(
+doc(db,"users",user.uid)
+);
+
+if(userSnap.exists()){
+
+const data = userSnap.data();
+
+document.getElementById(
+"availableBalance"
+).innerText =
+(data.balance || 0) + " PKR";
+
+}
+
+});
 
 window.submitWithdraw = async function(){
 
