@@ -1,13 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 Error</title>
 
-.
-k.
-m.
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Consolas,monospace;
+}
 
-m
-.k
-..nm
-..n
-.n.
+body{
+    background:#000;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    color:#00ff00;
+}
 
-.m
-.
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-1;
+}
+
+.box{
+    text-align:center;
+    padding:40px;
+    border:2px solid #00ff00;
+    background:rgba(0,0,0,.75);
+    box-shadow:0 0 25px #00ff00;
+    border-radius:15px;
+}
+
+.glitch{
+    font-size:90px;
+    color:#00ff00;
+    position:relative;
+    animation:glitch 1s infinite;
+}
+
+.glitch:before,
+.glitch:after{
+    content:attr(data-text);
+    position:absolute;
+    left:0;
+}
+
+.glitch:before{
+    color:red;
+    animation:glitchTop .4s infinite;
+}
+
+.glitch:after{
+    color:cyan;
+    animation:glitchBottom .5s infinite;
+}
+
+@keyframes glitch{
+    0%,100%{transform:translate(0);}
+    20%{transform:translate(-2px,2px);}
+    40%{transform:translate(2px,-2px);}
+    60%{transform:translate(-2px,-2px);}
+    80%{transform:translate(2px,2px);}
+}
+
+@keyframes glitchTop{
+    0%{transform:translate(-3px,-3px);}
+    100%{transform:translate(3px,3px);}
+}
+
+@keyframes glitchBottom{
+    0%{transform:translate(3px,3px);}
+    100%{transform:translate(-3px,-3px);}
+}
+
+h2{
+    margin-top:20px;
+    color:#ff0000;
+    font-size:30px;
+}
+
+p{
+    color:white;
+    margin-top:15px;
+    font-size:18px;
+}
+
+button{
+    margin-top:25px;
+    padding:12px 30px;
+    background:#00ff00;
+    color:#000;
+    border:none;
+    border-radius:8px;
+    font-size:18px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+button:hover{
+    background:#fff;
+    transform:scale(1.05);
+}
+
+.blink{
+    animation:blink .7s infinite;
+}
+
+@keyframes blink{
+    50%{
+        opacity:0;
+    }
+}
+</style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="box">
+    <div class="glitch" data-text="404">404</div>
+    <h2 class="blink">⚠ SYSTEM BREACH DETECTED ⚠</h2>
+    <p>Your App Is Hacked</p>
+    <p style="color:#00ff00;">Access Denied...</p>
+
+    <button onclick="location.reload()">
+        TRY AGAIN
+    </button>
+</div>
+
+<script>
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+const letters="01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const fontSize=16;
+const columns=canvas.width/fontSize;
+const drops=[];
+
+for(let i=0;i<columns;i++) drops[i]=1;
+
+function draw(){
+ctx.fillStyle="rgba(0,0,0,0.05)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="#00ff00";
+ctx.font=fontSize+"px monospace";
+
+for(let i=0;i<drops.length;i++){
+
+const text=letters[Math.floor(Math.random()*letters.length)];
+
+ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+
+if(drops[i]*fontSize>canvas.height&&Math.random()>0.975)
+drops[i]=0;
+
+drops[i]++;
+}
+}
+
+setInterval(draw,35);
+</script>
+
+</body>
+</html>
